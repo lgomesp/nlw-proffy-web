@@ -3,29 +3,55 @@ import React from 'react';
 import whatsappIcon from './../../assets/images/icons/whatsapp.svg'
 
 import './styles.css'
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+    id: number,
+    subject: string,
+    cost: number,
+    name: string,
+    avatar: string,
+    whatsapp: string,
+    bio: string
+}
+
+interface TeacherItemProps {
+    teacher: Teacher
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+
+    function createNewConnection() {
+        api.post('connections', {
+            user_id: teacher.id
+        })
+    }
+
     return (
         <article className="teacher-item">
             <header>
-                <img src="https://avatars3.githubusercontent.com/u/14145821?s=460&u=095497ff915574d68b6b47f62b241485bea2d840&v=4" alt="Lucas Gomes" />
+                <img src={teacher.avatar} alt={teacher.name} />
                 <div>
-                    <strong>Lucas Gomes</strong>
-                    <span>Química</span>
+                    <strong>{teacher.name}</strong>
+                    <span>{teacher.subject}</span>
                 </div>
             </header>
 
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. <br /><br /> Dolores nobis cupiditate, necessitatibus voluptatum reiciendis amet. Accusamus quibusdam, molestiae facere velit voluptatibus commodi, distinctio rerum nulla cum perferendis tenetur voluptatem iste!</p>
+            <p>{teacher.bio}</p>
 
             <footer>
                 <p>
                     Preço/hora
-                <strong>R$ 50,00</strong>
+                <strong>R$ {teacher.cost}</strong>
                 </p>
-                <button type="button">
+                <a 
+                    onClick={createNewConnection}
+                    target="_blank"
+                    href={`https://wa.me/${teacher.whatsapp}`}
+                >
                     <img src={whatsappIcon} alt="Whatsapp" />
-                Entrar em contato
-            </button>
+                    Entrar em contato
+                </a>
             </footer>
         </article>
     )
